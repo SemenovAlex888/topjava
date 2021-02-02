@@ -30,8 +30,34 @@ public class UserMealsUtil {
     }
 
     public static List<UserMealWithExcess> filteredByCycles(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
-        // TODO return filtered list with excess. Implement by cycles
-        return null;
+
+        List<UserMealWithExcess> userMealWithExcesses = new ArrayList<UserMealWithExcess>();
+
+        for (UserMeal userMeal : meals) {
+            if (TimeUtil.isBetweenHalfOpen(LocalTime.from(userMeal.getDateTime()), startTime, endTime)) {
+                UserMealWithExcess user = new UserMealWithExcess(userMeal.getDateTime(),
+                        userMeal.getDescription(),
+                        userMeal.getCalories(),
+                        excessReturnByCycles(caloriesPerDay, meals, userMeal.getDateTime().toLocalDate()));
+                userMealWithExcesses.add(user);
+            }
+        }
+        return userMealWithExcesses;
+    }
+
+    // метод по определению excess для метода filteredByCycles
+    private static boolean excessReturnByCycles(int caloriesPerDay, List<UserMeal> meals, LocalDate localDate) {
+        int totalcaloriesPerDay = 0;
+
+        for (UserMeal userMeal : meals) {
+            if (userMeal.getDateTime().toLocalDate().equals(localDate)) {
+                totalcaloriesPerDay = totalcaloriesPerDay + userMeal.getCalories();
+            }
+        }
+
+        if (totalcaloriesPerDay > caloriesPerDay) {
+            return true;
+        } else return false;
     }
 
     public static List<UserMealWithExcess> filteredByStreams(List<UserMeal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
