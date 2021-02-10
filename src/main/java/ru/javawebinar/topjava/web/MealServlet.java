@@ -25,7 +25,7 @@ public class MealServlet extends HttpServlet {
         log.debug("redirect to meals");
 
         request.setAttribute("list", mealsList);
-        getServletContext().getRequestDispatcher("/meals.jsp").forward(request, response);    // получаем Request Dispatcher (Диспетчер Запросов) и указываем ему jsp страницу которая будет отображаться при обращении к данному методуGET. Метод forward(req, resp) перенаправляет наш запрос на jsp страницу.
+        getServletContext().getRequestDispatcher("/meals.jsp").forward(request, response);               // получаем Request Dispatcher (Диспетчер Запросов) и указываем ему jsp страницу которая будет отображаться при обращении к данному методуGET. Метод forward(req, resp) перенаправляет наш запрос на jsp страницу.
 
         // response.sendRedirect("meals.jsp");
 
