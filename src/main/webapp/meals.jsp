@@ -17,28 +17,28 @@
 <h3><a href="index.html">Home</a></h3>
 <hr>
 <h2>Meals</h2>
-<c:forEach var="user" items="${requestScope.users}">
-    <li><c:out value="${user}" /></li>
-</c:forEach>
 <table>
     <tr>
         <th>Date</th>
         <th>Description</th>
         <th>Calories</th>
     </tr>
-    <%--
-    <jsp:useBean id="list" scope="request" type="ru.javawebinar.topjava.model.MealTo"/>
-    <c:forEach items="${list}" var="meal">
+    <c:forEach items="${requestScope.list}" var="meal">
             <td>${meal.dateTime}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
     </c:forEach>
-    --%>
 </table>
 <%--
-testing
+testing 1
 <p>Name: ${name}</p>
 <p>Age: ${age}</p>
+--%>
+<%--
+testing 2
+<c:forEach var="user" items="${requestScope.users}">
+    <li><c:out value="${user}" /></li>
+</c:forEach>
 --%>
 </body>
 </html>
