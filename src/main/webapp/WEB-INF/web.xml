@@ -7,12 +7,12 @@
     <display-name>Topjava</display-name>
 
     <servlet>
-        <servlet-name>userServlet</servlet-name>
-        <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>
+        <servlet-name>userServlet</servlet-name>    <!-- Тэг servlet-name содержит внутри себя какое-то имя — вы можете использовать то, что вам больше нравится. -->
+        <servlet-class>ru.javawebinar.topjava.web.UserServlet</servlet-class>      <!-- Тэг servlet-class должен содержать реальное имя класса. -->
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
-        <servlet-name>userServlet</servlet-name>
+        <servlet-name>userServlet</servlet-name>    <!-- мы определяем какой сервлет будет обрабатывать введенный URL -->
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
 
