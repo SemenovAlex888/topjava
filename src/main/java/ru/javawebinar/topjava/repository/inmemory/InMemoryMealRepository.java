@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.inmemory;
 
+import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealsUtil;
@@ -11,9 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository.USER_ID;
 
-/*
-TODO add annotation
- */
+@Repository
 public class InMemoryMealRepository implements MealRepository {
     private final Map<Integer, Map<Integer, Meal>> repository = new ConcurrentHashMap<>();
     private final AtomicInteger counter = new AtomicInteger(0);
@@ -54,5 +53,9 @@ public class InMemoryMealRepository implements MealRepository {
         Map<Integer, Meal> meals = repository.get(userId);
         return meals.values();
     }
+
+    /*
+    TODO add method return part by dates
+     */
 }
 
