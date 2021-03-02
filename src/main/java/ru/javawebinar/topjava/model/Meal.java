@@ -10,8 +10,9 @@ import java.time.LocalTime;
 
 @NamedQueries({
         @NamedQuery(name = Meal.DELETE, query = "DELETE FROM Meal u WHERE u.id=:id"),
-        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT u FROM Meal u WHERE u.user=?1"),
-        @NamedQuery(name = Meal.BY_DATE, query = "SELECT u FROM Meal u WHERE u.user=?1 AND u.dateTime >=?2 AND u.dateTime <?3 ORDER BY u.dateTime DESC"),
+        @NamedQuery(name = Meal.ALL_SORTED, query = "SELECT u FROM Meal u WHERE u.user.id=:userId ORDER BY u.dateTime DESC"),
+        @NamedQuery(name = Meal.BY_DATE, query = "SELECT u FROM Meal u WHERE u.user.id=:userId AND u.dateTime >=:startDate AND" +
+                " u.dateTime <:endDate ORDER BY u.dateTime DESC"),
 })
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "meals_unique_user_datetime_idx")})
@@ -34,8 +35,9 @@ public class Meal extends AbstractBaseEntity {
     @NotNull
     private int calories;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @NotEmpty
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Meal() {

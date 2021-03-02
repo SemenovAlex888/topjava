@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import javax.jws.soap.SOAPBinding;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
@@ -21,7 +23,10 @@ public class JpaMealRepository implements MealRepository {
     @Override
     @Transactional
     public Meal save(Meal meal, int userId) {
-        if(meal.isNew()) {
+        User ref = em.getReference(User.class, userId);
+        meal.setUser(ref);
+        //Hibernate.initialize(meal.getUser());
+        if (meal.isNew()) {
             em.persist(meal);
             return meal;
         } else {
@@ -44,8 +49,8 @@ public class JpaMealRepository implements MealRepository {
 
     @Override
     public List<Meal> getAll(int userId) {
-        List resultList = em.createNamedQuery(Meal.ALL_SORTED).
-                setParameter(1, User.class).
+        List resultList = em.createNamedQuery(Meal.ALL_SORTED, Meal.class).
+                setParameter("userId", userId).
                 getResultList();
         return resultList;
     }
@@ -53,9 +58,9 @@ public class JpaMealRepository implements MealRepository {
     @Override
     public List<Meal> getBetweenHalfOpen(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         List resultList = em.createNamedQuery(Meal.BY_DATE).
-                setParameter(1, User.class).
-                setParameter(2, startDateTime).
-                setParameter(3, endDateTime).
+                setParameter("userId", userId).
+                setParameter("startDate", startDateTime).
+                setParameter("endDate", endDateTime).
                 getResultList();
         return resultList;
     }
