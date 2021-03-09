@@ -4,5 +4,6 @@ target
 *.iml
 log
 *.patch
+C:\Users\pc\Documents\Projects_IT\TopJava\topjava\src\main\resources\db\postgres.properties
 
 
