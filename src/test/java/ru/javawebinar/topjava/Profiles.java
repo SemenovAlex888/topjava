@@ -27,6 +27,7 @@ public class Profiles {
         }
     }
 
+    /*
     //http://stackoverflow.com/questions/23871255/spring-profiles-simple-example-of-activeprofilesresolver
     public static class ActiveDbProfileResolver implements ActiveProfilesResolver {
         @Override
@@ -34,4 +35,5 @@ public class Profiles {
             return new String[]{getActiveDbProfile()};
         }
     }
+     */
 }
