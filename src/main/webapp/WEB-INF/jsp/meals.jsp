@@ -45,9 +45,9 @@
             <th></th>
         </tr>
         </thead>
-        <c:forEach items="${meals}" var="meal">
+        <c:forEach items="${mealsAttribute}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-            <tr data-mealExcess="${meal.excess}">
+            <<tr data-mealExcess="${meal.excess}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
                         <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
@@ -58,7 +58,7 @@
                 <td>${meal.calories}</td>
                 <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
                 <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
-            </tr>
+            <</tr>
         </c:forEach>
     </table>
 </section>
