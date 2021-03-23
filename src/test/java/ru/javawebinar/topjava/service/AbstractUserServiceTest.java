@@ -1,9 +1,12 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.*;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.UserTestData;
@@ -24,22 +27,38 @@ import static ru.javawebinar.topjava.Profiles.JDBC;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
+    private static Environment environment = new StandardEnvironment();
+
+    @Before
+    public void setup() {
+        cacheManager.getCache("users").clear();
+        if(!environment.acceptsProfiles(JDBC)) {
+            jpaUtil.clear2ndLevelHibernateCache();
+        }
+    }
+
     @Autowired
     protected UserService service;
 
     @Autowired
     private CacheManager cacheManager;
 
-    @Autowired
+    @Autowired(required = false)
+    @Lazy
     protected JpaUtil jpaUtil;
 
-    private Environment environment = new StandardEnvironment();
-
-    @Before
-    public void setup() {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
+/*
+    // https://stackoverflow.com/questions/19225115/how-to-do-conditional-auto-wiring-in-spring
+    @Bean
+    public JpaUtil myBean() {
+        JpaUtil jpaUtil = new JpaUtil();
+        if (environment.acceptsProfiles(JDBC)) {
+            jpaUtil.setDependency(dependencyX());
+        } else {
+            jpaUtil.setDependency(dependencyY());
+        }
+        return jpaUtil;
+    }*/
 
     @Test
     public void create() {
