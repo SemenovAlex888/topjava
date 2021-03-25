@@ -1,41 +1,30 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.env.*;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import ru.javawebinar.topjava.repository.JpaUtil;
 
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assume.assumeTrue;
 import static ru.javawebinar.topjava.UserTestData.*;
-import static ru.javawebinar.topjava.Profiles.JDBC;
 
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
-    private static Environment environment = new StandardEnvironment();
-
-    @Before
-    public void setup() {
-        cacheManager.getCache("users").clear();
-        if(!environment.acceptsProfiles(JDBC)) {
-            jpaUtil.clear2ndLevelHibernateCache();
-        }
-    }
+    @Autowired
+    public Environment environment;
 
     @Autowired
     protected UserService service;
@@ -44,21 +33,21 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     private CacheManager cacheManager;
 
     @Autowired(required = false)
-    @Lazy
     protected JpaUtil jpaUtil;
 
-/*
-    // https://stackoverflow.com/questions/19225115/how-to-do-conditional-auto-wiring-in-spring
-    @Bean
-    public JpaUtil myBean() {
-        JpaUtil jpaUtil = new JpaUtil();
-        if (environment.acceptsProfiles(JDBC)) {
-            jpaUtil.setDependency(dependencyX());
-        } else {
-            jpaUtil.setDependency(dependencyY());
+    @Before
+    public void setup() {
+        cacheManager.getCache("users").clear();
+        if (isJpaOrDatajpa()) {   // !environment.acceptsProfiles(JDBC)
+            jpaUtil.clear2ndLevelHibernateCache();
         }
-        return jpaUtil;
-    }*/
+    }
+
+    public boolean isJpaOrDatajpa() {
+        return environment.acceptsProfiles(org.springframework.core.env.Profiles.of(ru.javawebinar.topjava.Profiles.JPA,
+                ru.javawebinar.topjava.Profiles.DATAJPA));
+        // return  environment.acceptsProfiles("datajpa", "jpa");
+    }
 
     @Test
     public void create() {
@@ -119,7 +108,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void createWithException() throws Exception {
-        assumeTrue(environment.acceptsProfiles(JDBC));
+        assumeTrue(isJpaOrDatajpa());
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "  ", "mail@yandex.ru", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "  ", "password", Role.USER)));
         validateRootCause(ConstraintViolationException.class, () -> service.create(new User(null, "User", "mail@yandex.ru", "  ", Role.USER)));
