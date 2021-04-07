@@ -17,6 +17,7 @@
             <span class="fa fa-plus"></span>
             <spring:message code="common.add"/>
         </button>
+        <!-- id="datatable" по данному id данный элемент передается в файл topjava.users.js (стр.11) -->
         <table class="table table-striped" id="datatable">
             <thead>
             <tr>
@@ -45,6 +46,7 @@
     </div>
 </div>
 
+<!-- id="editRow" используется в topjava.common.js для вызова модального окна (метод Bootstrap) -->
 <div class="modal fade" tabindex="-1" id="editRow">
     <div class="modal-dialog">
         <div class="modal-content">
